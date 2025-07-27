@@ -1,9 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import portfolioArchiveImg from "../assets/portfolio_archive.png"; // Project preview image
-import htmlIcon from "../assets/skills/html.svg"; // HTML icon
-import cssIcon from "../assets/skills/css.svg"; // CSS icon
-import javascriptIcon from "../assets/skills/javascript.svg"; // JavaScript icon
+import portfolioArchiveImg from "../assets/portfolio_sample.png"; // Project preview image
+import reactIcon from "../assets/skills/react.svg"; // HTML icon
+import tailwindIcon from "../assets/skills/tailwindcss.svg"; // CSS icon
+import typescriptIcon from "../assets/skills/typescript.svg"; // JavaScript icon
+import pythonIncon from "../assets/skills/python.svg"; // JavaScript icon
+import bashIcon from "../assets/skills/bash.svg"; // JavaScript icon
+import frappeBenchInfo from "../assets/frappe_bench_info.png"; // JavaScript icon
 
 interface Project {
   id: string;
@@ -17,18 +20,31 @@ interface Project {
 
 export const projects: Project[] = [
   {
-    id: "portfolio-archive",
-    projectName: "Personal Portfolio - Archive",
+    id: "personal-portfolio",
+    projectName: "Personal Portfolio",
     previewImg: portfolioArchiveImg,
     langs: [
-      { name: "HTML", icon: <img src={htmlIcon} alt="HTML" className="w-6 h-6" /> },
-      { name: "CSS", icon: <img src={cssIcon} alt="CSS" className="w-6 h-6" /> },
-      { name: "JavaScript", icon: <img src={javascriptIcon} alt="JavaScript" className="w-6 h-6" /> },
+      { name: "React", icon: <img src={reactIcon} alt="React" className="w-6 h-6" /> },
+      { name: "TailWindCSS", icon: <img src={tailwindIcon} alt="TailWindCSS" className="w-6 h-6" /> },
+      { name: "TypeScript", icon: <img src={typescriptIcon} alt="TypeScript" className="w-6 h-6" /> },
     ],
     description:
-      "A responsive and animated portfolio website showcasing skills in HTML, CSS, and JavaScript, optimized for all device types.",
-    projectLink: "https://sanjayrajaarchive.netlify.app/",
-    sourceLink: "https://github.com/sanjayraajaa/Personal_Portfolio",
+      "A responsive and animated personal portfolio website built with React, TypeScript, and Tailwind CSS. It showcases projects, skills, and experience with a modern UI, smooth animations, and optimized performance for all device types.",
+    projectLink: "https://sanjayraja.vercel.app/",
+    sourceLink: "https://github.com/sanjayraajaa/personal-portfolio",
+  },
+  {
+    id: "frappe-bench-info",
+    projectName: "Frappe Bench Info",
+    previewImg: frappeBenchInfo,
+    langs: [
+      { name: "Pthoon", icon: <img src={pythonIncon} alt="Python" className="w-6 h-6" /> },
+      { name: "Bash", icon: <img src={bashIcon} alt="Bash" className="w-6 h-6" /> },
+    ],
+    description:
+      "A simple CLI tool to list all Frappe/ERPNext benches, sites, and database sizes. It scans a given path, detects benches, and shows site details in a table – no Frappe setup required.",
+    projectLink: "#",
+    sourceLink: "https://github.com/sanjayraajaa/frappe-bench-info",
   },
 ];
 
