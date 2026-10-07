@@ -1,6 +1,162 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-html {
+@theme {
+  --color-ink: #0a0a0b;
+  --color-ink-2: #111113;
+  --color-ink-3: #18181b;
+  --color-bone: #f2efe8;
+  --color-mute: #8e8a83;
+  --color-line: rgb(242 239 232 / 0.09);
+  --color-ember: #ff5b2e;
+  --color-ember-soft: #ff9a6b;
+
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+  --animate-drift: drift 22s ease-in-out infinite alternate;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes drift {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    50% { transform: translate3d(6%, -4%, 0) scale(1.08); }
+    100% { transform: translate3d(-4%, 5%, 0) scale(0.96); }
+  }
+}
+
+@layer base {
+  html {
     scroll-behavior: smooth;
-  }  
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-ember);
+    color: var(--color-ink);
+  }
+
+  /* The signature move: emphasis inside headings turns into ember serif italic. */
+  h1 em,
+  h2 em,
+  h3 em,
+  .statement em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-ember);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-ink); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-3);
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-ember); }
+}
+
+@layer components {
+  /* Film grain over the whole page */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Soft light that follows the cursor */
+  .cursor-glow {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      600px circle at var(--mx, 50%) var(--my, -20%),
+      rgb(255 91 46 / 0.07),
+      transparent 60%
+    );
+  }
+
+  .grid-lines {
+    background-image:
+      linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 75%);
+  }
+
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(242 239 232 / 0.18);
+  }
+
+  /* Card spotlight; position is driven by --sx / --sy set from JS */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: radial-gradient(
+      420px circle at var(--sx, 50%) var(--sy, 50%),
+      rgb(255 91 46 / 0.14),
+      transparent 45%
+    );
+  }
+  .spotlight:hover::before { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquee,
+  .animate-spin-slow,
+  .animate-drift {
+    animation: none !important;
+  }
+}
+
+/* react-toastify, matched to the theme */
+.Toastify__toast {
+  background: var(--color-ink-3) !important;
+  color: var(--color-bone) !important;
+  border: 1px solid var(--color-line);
+  border-radius: 14px !important;
+  font-family: var(--font-sans);
+}
+.Toastify__progress-bar { background: var(--color-ember) !important; }

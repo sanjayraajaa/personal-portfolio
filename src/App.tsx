@@ -1,94 +1,66 @@
-import { useState } from "react";
-import Home from "./components/Home";
-import Projects from "./components/Projects";
-import Skills from "./components/Skills";
-import Contact from "./components/Contact";
-import Experience from "./components/Experience";
-import { DotPattern } from "@/components/magicui/dot-pattern";
-import { cn } from "@/lib/utils";
-import navLogo from "./assets/logo.svg";
-import Footer from "./components/Footer";
+import { useEffect } from "react";
+import { MotionConfig, motion, useScroll, useSpring } from "motion/react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const App: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+import Nav from "./components/Nav";
+import Home from "./components/Home";
+import About from "./components/About";
+import Experience from "./components/Experience";
+import Projects from "./components/Projects";
+import Skills from "./components/Skills";
+import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
-  const handleBurgerClick = () => {
-    setIsOpen((prev) => !prev);
-  };
+function useCursorGlow() {
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    let frame = 0;
+    const onMove = (e: PointerEvent) => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        document.documentElement.style.setProperty("--mx", `${e.clientX}px`);
+        document.documentElement.style.setProperty("--my", `${e.clientY}px`);
+      });
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("pointermove", onMove);
+    };
+  }, []);
+}
+
+const App: React.FC = () => {
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  useCursorGlow();
 
   return (
-    <div className="relative bg-gray-900 text-white min-h-screen">
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        style={{ zIndex: 99999, position: "fixed" }}
-      />
-      <DotPattern
-        width={25}
-        height={25}
-        x={0}
-        y={0}
-        cx={2}
-        cy={2}
-        cr={1}
-        glow={false}
-        className={cn("absolute inset-0 w-full h-full opacity-50")}
-      />
+    <MotionConfig reducedMotion="user">
+      <div className="relative min-h-screen overflow-x-clip bg-ink text-bone">
+        <motion.div
+          className="fixed inset-x-0 top-0 z-[80] h-[2px] origin-left bg-ember"
+          style={{ scaleX: progress }}
+        />
+        <div className="cursor-glow" aria-hidden />
+        <div className="grain" aria-hidden />
 
-      {/* Sticky Navbar */}
-      <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-gray-800 shadow-lg z-50">
-        <a href="#home" className="flex items-center space-x-2 text-white">
-          <img src={navLogo} alt="Logo" className="h-10" />
-          <h2 className="text-xl font-bold">Sanjay Raja S</h2>
-        </a>
+        <Nav />
 
-        {/* Hamburger Menu */}
-        <div className="md:hidden cursor-pointer" onClick={handleBurgerClick}>
-          <div className={`w-6 h-0.5 bg-white mb-1 transition-transform ${isOpen ? "rotate-45 translate-y-1.5" : ""}`}></div>
-          <div className={`w-6 h-0.5 bg-white mb-1 ${isOpen ? "opacity-0" : ""}`}></div>
-          <div className={`w-6 h-0.5 bg-white transition-transform ${isOpen ? "-rotate-45 -translate-y-1.5" : ""}`}></div>
-        </div>
-
-        {/* Desktop Nav Links */}
-        <ul className="md:flex space-x-6 hidden font-medium">
-          <li><a href="#experience" className="hover:text-gray-300">Experience</a></li>
-          <li><a href="#projects" className="hover:text-gray-300">Projects</a></li>
-          <li><a href="#skills" className="hover:text-gray-300">Skills</a></li>
-          <li><a href="#contact" className="hover:text-gray-300">Contact</a></li>
-        </ul>
-      </nav>
-
-      {/* Mobile Dropdown Menu (Below Navbar) */}
-      {isOpen && (
-        <ul className="md:hidden fixed top-[60px] left-0 w-full bg-gray-800 shadow-lg z-40 flex flex-col items-center p-4 space-y-4 font-medium">
-          <li><a href="#home" onClick={handleBurgerClick} className="hover:text-gray-300">Home</a></li>
-          <li><a href="#experience" onClick={handleBurgerClick} className="hover:text-gray-300">Experience</a></li>
-          <li><a href="#projects" onClick={handleBurgerClick} className="hover:text-gray-300">Projects</a></li>
-          <li><a href="#skills" onClick={handleBurgerClick} className="hover:text-gray-300">Skills</a></li>
-          <li><a href="#contact" onClick={handleBurgerClick} className="hover:text-gray-300">Contact</a></li>
-        </ul>
-      )}
-
-      {/* Page Sections */}
-      <main className="pt-16">
-        <section id="home" className="relative z-10 scroll-mt-16"><Home /></section>
-        <section id="experience" className="relative z-10 scroll-mt-16"><Experience /></section>
-        <section id="projects" className="relative z-10 scroll-mt-16"><Projects /></section>
-        <section id="skills" className="relative z-10 scroll-mt-16"><Skills /></section>
-        <section id="contact" className="relative z-10 scroll-mt-16"><Contact /></section>
+        <main className="relative z-10">
+          <Home />
+          <About />
+          <Experience />
+          <Projects />
+          <Skills />
+          <Contact />
+        </main>
         <Footer />
-      </main>
-    </div>
+
+        <ToastContainer position="bottom-right" autoClose={3000} theme="dark" style={{ zIndex: 99999 }} />
+      </div>
+    </MotionConfig>
   );
 };
 

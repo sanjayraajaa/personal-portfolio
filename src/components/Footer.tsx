@@ -1,21 +1,31 @@
 import React from "react";
 import { FaHeart, FaCoffee } from "react-icons/fa";
+import { profileData } from "@/data";
+import { Eyebrow } from "./primitives";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-6 bg-gray-800 text-gray-300">
-      <div className="max-w-5xl mx-auto px-6 flex flex-col items-center justify-center text-center">
-        <p className="text-sm md:text-base flex items-center gap-2">
-          Made with
-          <FaHeart className="text-red-400 hover:text-red-500 transition-colors duration-300" />
-          and
-          <FaCoffee className="text-[#C69C72] hover:text-[#7a5538] transition-colors duration-300" />
-          by Sanjay Raja S
+    <footer className="relative z-10 overflow-hidden border-t border-line px-4 pt-16 sm:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <p className="flex items-center gap-2 text-sm text-bone/70">
+          Made with <FaHeart className="text-ember" aria-label="love" /> and{" "}
+          <FaCoffee className="text-[#C69C72]" aria-label="coffee" /> by {profileData.name}
         </p>
-        <p className="text-xs md:text-sm">
-          © {new Date().getFullYear()} All Rights Reserved
-        </p>
+        <Eyebrow>© {new Date().getFullYear()} — All rights reserved</Eyebrow>
+        <a
+          href="#home"
+          className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.22em] text-mute transition-colors hover:text-bone"
+        >
+          Back to top
+          <span className="transition-transform duration-300 group-hover:-translate-y-1">↑</span>
+        </a>
       </div>
+      <p
+        aria-hidden
+        className="text-outline pointer-events-none mt-10 select-none whitespace-nowrap text-center text-[19vw] font-bold leading-[0.78] tracking-[-0.06em]"
+      >
+        Sanjay Raja
+      </p>
     </footer>
   );
 };
